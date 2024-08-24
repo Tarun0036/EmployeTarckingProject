@@ -26,6 +26,7 @@ public class OrganizationController {
 	}
 	
 }
+//mongodb://localhost:27017/    mongodb://localhost:27017/
 //class RegisterOrganistion
 //{
 //	
