@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Project {
 
 	private String _id;
-	private String name;
+	private String nameOfOrganization;
 	private String email;
 	private String password;
 	private String role;
@@ -14,17 +14,9 @@ public class Project {
 	private String employeId;
 	private String adminId;
 	private Integer noOfAdmins;
-	private String mobile;
-	private String location;
-	private String noOfEmps;
-	public String getNoOfEmps() {
-		return noOfEmps;
-	}
-
-	public void setNoOfEmps(String noOfEmps) {
-		this.noOfEmps = noOfEmps;
-	}
-
+	private String contact;
+	private String locationOfOrganization;
+	private String noOfEmp;
 	private String country;
 	private boolean isDeleted;
 	
@@ -44,14 +36,6 @@ public class Project {
 
 	public void set_id(String _id) {
 		this._id = _id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getEmail() {
@@ -110,20 +94,14 @@ public class Project {
 		this.noOfAdmins = noOfAdmins;
 	}
 
-	public String getMobile() {
-		return mobile;
+	
+
+	public String getContact() {
+		return contact;
 	}
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
+	public void setContact(String contact) {
+		this.contact = contact;
 	}
 
 	public String getCountry() {
@@ -140,6 +118,30 @@ public class Project {
 
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
+	}
+
+	public String getNameOfOrganization() {
+		return nameOfOrganization;
+	}
+
+	public void setNameOfOrganization(String nameOfOrganization) {
+		this.nameOfOrganization = nameOfOrganization;
+	}
+
+	public String getLocationOfOrganization() {
+		return locationOfOrganization;
+	}
+
+	public void setLocationOfOrganization(String locationOfOrganization) {
+		this.locationOfOrganization = locationOfOrganization;
+	}
+
+	public String getNoOfEmp() {
+		return noOfEmp;
+	}
+
+	public void setNoOfEmp(String noOfEmp) {
+		this.noOfEmp = noOfEmp;
 	}
 
 	

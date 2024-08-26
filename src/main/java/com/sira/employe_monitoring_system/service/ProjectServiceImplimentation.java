@@ -27,10 +27,10 @@ public class ProjectServiceImplimentation implements ProjectService {
 	// Organization Registration
 	@Override
 	public Project addOrganistaion(Project project) {
-		if (project.getName().isEmpty() || project.getEmail().isEmpty() || project.getLocation().isEmpty()
-				|| project.getCountry().isEmpty() || project.getMobile().isEmpty() || project.getName() == null
-				|| project.getEmail() == null || project.getLocation() == null || project.getLocation() == null
-				|| project.getMobile() == null || project == null || project.getNoOfEmps().isEmpty()||project.getNoOfEmps()==null) {
+		if (project.getNameOfOrganization().isEmpty() || project.getEmail().isEmpty() || project.getLocationOfOrganization().isEmpty()
+				|| project.getCountry().isEmpty() || project.getContact().isEmpty() || project.getNameOfOrganization() == null
+				|| project.getEmail() == null || project.getLocationOfOrganization() == null || project.getLocationOfOrganization() == null
+				|| project.getContact() == null || project == null || project.getNoOfEmp().isEmpty()||project.getNoOfEmp()==null) {
 			throw new MandatoryFeildExcetion("All Feilds are Mandatory");
 		}
 		if(repo.existsByemail(project.getEmail()))
@@ -44,17 +44,17 @@ public class ProjectServiceImplimentation implements ProjectService {
 	// Edit Organization
 	@Override
 	public boolean updateOrganization(String name, Project userDto) {
-		Optional<Project> optional = repo.findByName(name);
+		Optional<Project> optional = repo.findBynameOfOrganization(name);
 		if (optional.get().isDeleted()) {
 			return false;
 		}
 
 		if (optional.isPresent()) {
 			Project user = optional.get();
-			user.setName(userDto.getName());
+			user.setNameOfOrganization(name);
 			user.setEmail(userDto.getEmail());
-			user.setMobile(userDto.getMobile());
-			user.setLocation(userDto.getLocation());
+			user.setContact(userDto.getContact());
+			user.setLocationOfOrganization(name);
 			user.setCountry(userDto.getCountry());
 			repo.save(user);
 			return true;
@@ -66,7 +66,7 @@ public class ProjectServiceImplimentation implements ProjectService {
 	@Override
 	public boolean deleteOrganization(String name) {
 
-		Optional<Project> optional = repo.findByName(name);
+		Optional<Project> optional = repo.findBynameOfOrganization(name);
 		if (optional.get().isDeleted()) {
 			return false;
 		}
@@ -83,7 +83,7 @@ public class ProjectServiceImplimentation implements ProjectService {
 	@Override
 	public Project getByName(String name) {
 
-		return repo.findByName(name).get();
+		return repo.findBynameOfOrganization(name).get();
 	}
 
 	// Add Super User
@@ -104,7 +104,7 @@ public class ProjectServiceImplimentation implements ProjectService {
 	public Project addAdmin(Project project) {
 		if (project.getAdminId().isEmpty() || project.getAdminId() == null || project.getEmail().isEmpty()
 				|| project == null || project.getEmail() == null || project.getPassword().isEmpty()
-				|| project.getPassword() == null || project.getName().isEmpty() || project.getName() == null
+				|| project.getPassword() == null || project.getNameOfOrganization().isEmpty() || project.getNameOfOrganization() == null
 				|| project.getRole() == null || project.getRole().isEmpty()) {
 			throw new MandatoryFeildExcetion("All Feilds Are Mandatory");
 		}
@@ -119,8 +119,8 @@ public class ProjectServiceImplimentation implements ProjectService {
 
 	@Override
 	public Project addEmploe(Project project) {
-		if(project.getName()==null||project.getEmail()==null||project.getPassword()==null
-				||project.getMobile()==null||project.getEmployeId()==null||
+		if(project.getNameOfOrganization()==null||project.getEmail()==null||project.getPassword()==null
+				||project.getContact()==null||project.getEmployeId()==null||
 				project.getEmpRole()==null)
 		{
 			throw new MandatoryFeildExcetion("Fill the fill feilds properly");
@@ -197,10 +197,10 @@ public class ProjectServiceImplimentation implements ProjectService {
 			while(iterator.hasNext())
 			{
 				Project next = iterator.next();
-				employes.put("name", next.getName());
+				employes.put("name", next.getNameOfOrganization());
 				employes.put("Employe Id", next.getEmployeId());
 				employes.put("Employe Mail Id", next.getEmail());
-				employes.put("Mobile", next.getMobile());
+				employes.put("Mobile", next.getContact());
 				employes.put("Employe Role", next.getEmpRole());
 			}
 		}
@@ -226,9 +226,9 @@ public class ProjectServiceImplimentation implements ProjectService {
 			proj.setEmail(project.getEmail());
 			proj.setEmployeId(employeId);
 			proj.setEmpRole(project.getEmpRole());
-			proj.setMobile(project.getMobile());
+			proj.setContact(project.getContact());
 			proj.setPassword(encode.encode(project.getPassword()));
-			proj.setName(project.getName());
+			proj.setNameOfOrganization(employeId);
 			repo.save(proj);
 			return proj;
 		}

@@ -14,7 +14,7 @@ public interface ProjectRepository extends MongoRepository<Project, String>{
 	
 	List<Project> findByrole(String role);
 	
-	Optional<Project> findByName(String name);
+	Optional<Project> findBynameOfOrganization(String name);
 	
 	boolean existsByemail(String email);
 	
