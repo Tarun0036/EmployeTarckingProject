@@ -28,6 +28,10 @@ public class SecurityConfiguration {
 				.password("User@123")
 				.roles("USER").build();
 		
+		UserDetails superUser = User.withUsername("Super User")
+				.password("SuperUser@123")
+				.roles("Super User").build();
+		
 		return new InMemoryUserDetailsManager(admin,user );
 	}
 	
@@ -37,7 +41,10 @@ public class SecurityConfiguration {
 		return http.csrf().
 				disable().
 				authorizeHttpRequests().
-				requestMatchers("/admin/add","admin/login","admin/get/**", "organization/register").
+				requestMatchers("/project/organizationRegitration", "/project/edit/**", "/project/delete/**",
+						"project/get/**", "project/add/superuser","/project/reg/admin", "/project/add/emp"
+						, "/project/loginValidation", "project/allOrganizations", "/project/allAdmins",
+						"/project/allEmployes", "/project/editEmploye/**").
 				permitAll()
 				.and().authorizeHttpRequests().
 				requestMatchers("/admin/find/**").
