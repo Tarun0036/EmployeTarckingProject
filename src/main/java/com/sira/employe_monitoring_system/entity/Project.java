@@ -143,7 +143,4 @@ public class Project {
 	public void setNoOfEmp(String noOfEmp) {
 		this.noOfEmp = noOfEmp;
 	}
-
-	
-	
 }

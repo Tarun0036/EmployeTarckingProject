@@ -42,9 +42,11 @@ public class SecurityConfiguration {
 				disable().
 				authorizeHttpRequests().
 				requestMatchers("/project/organizationRegitration", "/project/edit/**", "/project/delete/**",
-						"project/get/**", "project/add/superuser","/project/reg/admin", "/project/add/emp"
-						, "/project/loginValidation", "project/allOrganizations", "/project/allAdmins",
-						"/project/allEmployes", "/project/editEmploye/**").
+						 "/project/allOrganizations", "/users/addSuperUser","/users/addAdmin", "/users/addEmploye",
+						 "/users/loginValidation","/users/employesInCompany/**", "/project/getByName/**",
+						"/users/editEmploye/**", "/users/allEmployes/**", "/users/getAmdins/**", "users/getCompany/**"
+						,"/employe/logintTime/**", "/employe/postLoginDetails", "users/getAdminByCompanyId/**", "/employe/logout/**"
+						, "/users/editAdmin/**", "/users/deleteAdmin/**", "/users/validate").
 				permitAll()
 				.and().authorizeHttpRequests().
 				requestMatchers("/admin/find/**").
