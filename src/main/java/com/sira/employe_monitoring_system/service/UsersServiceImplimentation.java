@@ -11,14 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.sira.employe_monitoring_system.entity.Company;
-import com.sira.employe_monitoring_system.entity.EmployeLoginDetails;
+import com.sira.employe_monitoring_system.entity.LoginLogutDetails;
 import com.sira.employe_monitoring_system.entity.Users;
 import com.sira.employe_monitoring_system.exception.InvalidRole;
 import com.sira.employe_monitoring_system.exception.MandatoryFeildExcetion;
 import com.sira.employe_monitoring_system.exception.OrganizationNameAlreadyExistsException;
-import com.sira.employe_monitoring_system.repository.EmployeLoginDetailsRepository;
+import com.sira.employe_monitoring_system.repository.LoginLogutRepository;
 import com.sira.employe_monitoring_system.repository.UsersRepository;
 
 @Service
@@ -28,7 +26,7 @@ public class UsersServiceImplimentation implements UsersService {
 	private UsersRepository repo;
 	
 	@Autowired
-	private EmployeLoginDetailsRepository employeLoginRepo;
+	private LoginLogutRepository employeLoginRepo;
 
 	@Autowired
 	private BCryptPasswordEncoder encode;
@@ -48,17 +46,20 @@ public class UsersServiceImplimentation implements UsersService {
 				|| user.getEmpRole().isEmpty() || user == null ) {
 			throw new MandatoryFeildExcetion("All Feilds are Mandatory");
 		}
-		if (repo.existsByEmail(user.getEmail())) {
+		if (repo.existsByEmail(user.getEmail()) && user.isDeleted() == false) {
 			throw new OrganizationNameAlreadyExistsException("This Maill is alredy Regitered.!");
 		}
-		EmployeLoginDetails employe = new EmployeLoginDetails();
-		employe.setEmployeId(user.getEmployeId());
-		employeLoginRepo.save(employe);
-		
 		String empId = "Emp";
 		Random random = new Random();
 		int adId = random.nextInt(1000);
 		empId = empId + adId;
+		
+		LoginLogutDetails employe = new LoginLogutDetails();
+		employe.setEmployeId(empId);
+		employe.setName(user.getName());
+		employeLoginRepo.save(employe);
+		
+		
 		user.setEmployeId(empId);
 		if(repo.existsByEmployeId(empId))
 		{
@@ -77,7 +78,7 @@ public class UsersServiceImplimentation implements UsersService {
 				) {
 			throw new OrganizationNameAlreadyExistsException("All Feilds are Mandatory");
 		}
-		if (repo.existsByEmail(user.getEmail())) {
+		if (repo.existsByEmail(user.getEmail()) && user.isDeleted() == false) {
 			throw new OrganizationNameAlreadyExistsException("This Maill is alredy Regitered.!");
 		}
 		user.setRole("Admin");
@@ -152,11 +153,11 @@ public class UsersServiceImplimentation implements UsersService {
 		users.setContact(getObject.getContact());
 		users.setEmail(getObject.getEmail());
 
-		if (repo.existsByEmail(users.getEmail())) {
+		if (repo.existsByEmail(users.getEmail()) && users.isDeleted()==false) {
 			throw new OrganizationNameAlreadyExistsException("This Maill is alredy Regitered.!");
 		}
 		
-		EmployeLoginDetails employeLoginDetails = new EmployeLoginDetails();
+		LoginLogutDetails employeLoginDetails = new LoginLogutDetails();
 		employeLoginDetails.setEmployeId(users.getEmployeId());
 		employeLoginRepo.save(employeLoginDetails);
 		users.setPassword(getObject.getPassword());
@@ -169,8 +170,9 @@ public class UsersServiceImplimentation implements UsersService {
 	// Delete Company
 	@Override
 	public boolean deleteEmployeById(String empId) {
-		Users users = repo.findByEmployeId(empId);
-		if (users != null) {
+		 Optional<Users> optional = repo.findById(empId);
+		if (optional.isPresent()) {
+			Users users = optional.get();
 			users.setDeleted(true);
 			repo.save(users);
 			return true;
@@ -236,32 +238,15 @@ public class UsersServiceImplimentation implements UsersService {
 	}
 
 	@Override
-	public Map getAdminByCompanyId(String companyId) {
-		List<Users> list = repo.findByCompanyId(companyId);
+	public List<Users> getAdminByCompanyId(String companyId) {
+		List<Users> list = repo.findByCompanyIdAndIsDeletedFalse(companyId);
 		if( list.size() !=0)
 		 {
-			Map<String, Map<String, String>> map = new HashMap<>();
-	        Iterator<Users> iterator = list.iterator();
-	        
-	        while (iterator.hasNext()) {
-	            Users user = iterator.next();
-	            if (!user.isDeleted() && user.getRole().equalsIgnoreCase("Admin")) {
-	                HashMap<String, String> map1 = new HashMap<>();
-	                map1.put("_id", user.get_id());
-	                map1.put("adminId", user.getAdminId());
-	                map1.put("name", user.getName());
-	                map1.put("email", user.getEmail());
-	                map1.put("company", user.getCompany());
-
-	                map.put(user.getAdminId(), map1);
-	            }
-	        }
-	        return map;
-			 
-		 }
+			return list;
+	     }
 		else
 		{
-			throw new RuntimeException("No Admin Found with this Id "+companyId);
+			return null;
 		}
 	}
 
@@ -271,7 +256,7 @@ public class UsersServiceImplimentation implements UsersService {
 		  Optional<Users> optional = repo.findById(adminId);
 		if(optional.isEmpty())
 		{
-			throw new RuntimeException("No Admin is Present");
+			throw new RuntimeException("No Admin is Present with this Id : "+adminId);
 		}
 		Users users = optional.get();
 		users.setAdminId(getByUi.getAdminId());
@@ -312,11 +297,28 @@ public class UsersServiceImplimentation implements UsersService {
 		}
 		else 
 		{
+			//throw new InvalidRole("");
 			return null;
 		}
 	}
-	
-	
+
+	@Override
+	public List<Users> getAllUsers() {
+		return repo.findAllByRoleNotAndIsDeletedFalse();
+	}
+
+	@Override
+	public List<Users> getEmployesBasedOnAdminId(String amdinId) {
+		List<Users> list = repo.findByRoleAndAdminIdAndIsDeletedFalse("User", amdinId);
+		if(list.size() != 0)
+		{
+			return list;
+		}
+		else
+		{
+			return null;
+		}
+	}
 	
 //	public Map<String, String> login(String email, String password)
 //	{
@@ -345,6 +347,4 @@ public class UsersServiceImplimentation implements UsersService {
 //			return null;
 //		}
 //	}
-	
-	
 }

@@ -9,7 +9,9 @@ public interface CompanyService {
 
 	Company addOrganistaion(Company company);
 	
-	Map getAllCompanies();
+	//Map getAllCompanies();
+	
+	List<Company> getAllCompanies();
 	
 	Company editCompany(String name, Company company);
 	

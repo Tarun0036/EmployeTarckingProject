@@ -25,7 +25,7 @@ public interface UsersService {
 	
 	Map getByCompanyName(String company);
 	
-	Map getAdminByCompanyId(String companyId);
+	List<Users> getAdminByCompanyId(String companyId);
 	
 	Users editAdminByAdminId(String adminId, Users user);
 	
@@ -34,7 +34,10 @@ public interface UsersService {
 	//Map<String, String> login(String email, String password);
 	//List<Users> getCompany(String company);
 	
-	
 	Users login(String email, String password);
+	
+	List<Users> getAllUsers();
+	
+	List<Users> getEmployesBasedOnAdminId(String adminId);
 
 }

@@ -30,7 +30,7 @@ public class CompanyServiceImplimentation implements CompanyService {
 	@Override
 	public Company addOrganistaion(Company company) {
 		if (company.getContact().isEmpty() || company.getContact() == null || company.getCountry().isEmpty()
-				|| company.getCountry().isEmpty() || company.getCountry() == null || company.getEmail().isEmpty()
+				|| company.getCountry() == null || company.getEmail().isEmpty()
 				|| company.getEmail() == null || company.getLocationOfOrganization().isEmpty()
 				|| company.getLocationOfOrganization() == null || company.getCompany().isEmpty()
 				|| company.getCompany() == null || company.getNoOfEmp().isEmpty()
@@ -44,36 +44,36 @@ public class CompanyServiceImplimentation implements CompanyService {
 	}
 
 	// All Companies
-	@Override
-	public Map getAllCompanies() {
-		List<Company> list = repo.findAll();
-		Map<String, Map<String, String>> companiesMap = new HashMap<>();
-
-		if (list.size() != 0) {
-			Iterator<Company> iterator = list.iterator();
-
-			while (iterator.hasNext()) {
-				Company company = iterator.next();
-
-				
-				if (!company.isDeleted()) {
-					Map<String, String> companyDetails = new HashMap<>();
-					companyDetails.put("id", company.get_id());
-					companyDetails.put("company", company.getCompany());
-					companyDetails.put("email", company.getEmail());
-					companyDetails.put("locationOfOrganization", company.getLocationOfOrganization());
-					companyDetails.put("contact", company.getContact());
-					companyDetails.put("noOfEmp", company.getNoOfEmp());
-					companyDetails.put("country", company.getCountry());
-					companiesMap.put(company.getCompany(), companyDetails);
-				}
-			}
-
-			return companiesMap;
-		}
-
-		return null;
-	}
+	//@Override
+//	public Map getAllCompanies() {
+//		List<Company> list = repo.findAll();
+//		Map<String, Map<String, String>> companiesMap = new HashMap<>();
+//
+//		if (list.size() != 0) {
+//			Iterator<Company> iterator = list.iterator();
+//
+//			while (iterator.hasNext()) {
+//				Company company = iterator.next();
+//
+//				
+//				if (!company.isDeleted()) {
+//					Map<String, String> companyDetails = new HashMap<>();
+//					companyDetails.put("id", company.get_id());
+//					companyDetails.put("company", company.getCompany());
+//					companyDetails.put("email", company.getEmail());
+//					companyDetails.put("locationOfOrganization", company.getLocationOfOrganization());
+//					companyDetails.put("contact", company.getContact());
+//					companyDetails.put("noOfEmp", company.getNoOfEmp());
+//					companyDetails.put("country", company.getCountry());
+//					companiesMap.put(company.getCompany(), companyDetails);
+//				}
+//			}
+//
+//			return companiesMap;
+//		}
+//
+//		return null;
+//	}
 
 	@Override
 	public Company editCompany(String _id, Company company) {
@@ -114,6 +114,19 @@ public class CompanyServiceImplimentation implements CompanyService {
 			 return optional.get();
 		 }
 		 return null;
+	}
+
+	@Override
+	public List<Company> getAllCompanies() {
+		List<Company> list = repo.findByIsDeletedFalse();
+		if(list.size() != 0)
+		{
+			return list;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 }

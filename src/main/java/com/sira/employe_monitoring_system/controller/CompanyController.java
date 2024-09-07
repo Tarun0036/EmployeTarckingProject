@@ -1,5 +1,6 @@
 package com.sira.employe_monitoring_system.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,14 +61,14 @@ public class CompanyController {
 	}
 	
 	@GetMapping("/allOrganizations")
-	public Map getAllCompanies()
+	public List<Company> getAllCompanies()
 	{
-		Map map = service.getAllCompanies();
-		if(map == null)
+		 List<Company> list = service.getAllCompanies();
+		if(list == null)
 		{
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Copmanies present");
 		}
-		return map;
+		return list;
 	}
 	
 	@GetMapping("/getByName/{name}")

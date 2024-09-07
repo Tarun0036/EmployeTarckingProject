@@ -1,5 +1,7 @@
 package com.sira.employe_monitoring_system.repository;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import com.sira.employe_monitoring_system.entity.Company;
 
@@ -12,5 +14,6 @@ public interface CompanyRepository extends MongoRepository<Company, String>{
 	 
 	 Company findByCompany(String name);
 	 
+	 List<Company> findByIsDeletedFalse();
 	 
 }

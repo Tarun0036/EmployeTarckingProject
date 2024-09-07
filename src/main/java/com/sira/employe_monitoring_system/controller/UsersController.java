@@ -102,9 +102,16 @@ public class UsersController {
 	}
 	
 	@GetMapping("/getAdminByCompanyId/{companyId}")
-	public Map getAdminByCompanyId(@PathVariable String companyId)
+	public ResponseEntity<List<Users>> getAdminByCompanyId(@PathVariable String companyId)
 	{
-		return service.getAdminByCompanyId(companyId);
+		 List<Users> list = service.getAdminByCompanyId(companyId);
+		 if (list != null) {
+				return new ResponseEntity<>(list, HttpStatus.OK);
+			}
+		 else
+		 {
+			 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		 }
 	}
 	
 	
@@ -147,6 +154,35 @@ public class UsersController {
 		else
 		{
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+	}
+	
+	@GetMapping("/allUsers")
+	public ResponseEntity<List<Users>> getAllUsers() 
+	{
+	    List<Users> allUsers = service.getAllUsers();
+	    
+	    if (allUsers != null && !allUsers.isEmpty()) 
+	    {
+	        return new ResponseEntity<>(allUsers, HttpStatus.OK);
+	    }
+	    else 
+	    {
+	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	    }
+	}
+
+	@GetMapping("/getEmployeByAdminId/{adminId}")
+	public ResponseEntity<List<Users>> getEmployeByAdminId(@PathVariable String adminId)
+	{
+		List<Users> list = service.getEmployesBasedOnAdminId(adminId);
+		if(list.size() != 0)
+		{
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		}
+		else
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 }

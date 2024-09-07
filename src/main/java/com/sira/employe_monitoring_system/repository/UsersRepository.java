@@ -3,6 +3,7 @@ package com.sira.employe_monitoring_system.repository;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import com.sira.employe_monitoring_system.entity.Users;
 
@@ -21,9 +22,16 @@ public interface UsersRepository extends MongoRepository<Users, String> {
 	
 	List<Users>  findByCompanyId(String companyId);
 	
-	Users findByAdminId(String adminId);
+	List<Users> findByAdminId(String adminId);
 	
 	boolean existsByAdminId(String adminId);
 	
 	boolean existsByEmployeId(String employeId);
+	
+	@Query("{'role': {$ne: 'Super User'}, 'isDeleted': false}")
+	List<Users> findAllByRoleNotAndIsDeletedFalse();
+	
+	List<Users> findByCompanyIdAndIsDeletedFalse(String companyId);
+	
+	List<Users> findByRoleAndAdminIdAndIsDeletedFalse(String role, String adminId);
 }
