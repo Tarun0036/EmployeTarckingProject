@@ -162,6 +162,7 @@ public class LogInLogOutServiceImplimentation implements LogInLogOutService {
 	    if (formattedDate.equals(employeLoginDetails.getDate())) {
 	        // If the employee logs in again on the same day, clear the previous logout time
 	        employeLoginDetails.setLogutTime(null);
+	        employeLoginDetails.setTotalLoggedTime(null);
 	    }
 
 	    // Set the login time and the current date for the employee
@@ -172,7 +173,6 @@ public class LogInLogOutServiceImplimentation implements LogInLogOutService {
 	    return employeLoginDetails;
 	}
 
-	
 	@Override
 	public LoginLogutDetails logOut(String employeId) {
 	    LocalTime now = LocalTime.now();
@@ -192,6 +192,8 @@ public class LogInLogOutServiceImplimentation implements LogInLogOutService {
 
 	    // Parse login time from the stored string
 	    LocalTime loginTime = LocalTime.parse(employeLoginDetails.getLoginTime(), timeFormat);
+
+	    // Parse logout time from the current time
 	    LocalTime logoutTimeParsed = LocalTime.parse(logoutTime, timeFormat);
 
 	    // Calculate the total login time in seconds
@@ -208,9 +210,12 @@ public class LogInLogOutServiceImplimentation implements LogInLogOutService {
 
 	    boolean logEntryUpdated = false;
 
+	    // Loop through logs to check if there's an entry for today
 	    for (LoginDetails log : logs) {
 	        if (log.getLoginDate().equals(formattedDate)) {
+	        	
 	            // Update the existing log entry
+	        	log.setLoginTime(employeLoginDetails.getLoginTime());
 	            log.setLogoutTime(logoutTime);
 	            log.setTimeDifference(formatDuration(totalSeconds));
 	            logEntryUpdated = true;
@@ -226,10 +231,12 @@ public class LogInLogOutServiceImplimentation implements LogInLogOutService {
 	        }
 	    }
 
-	    // Update the employee's total logged time and logs list
-	    employeLoginDetails.setLogutTime(logoutTime);
-	    employeLoginDetails.setTotalLoggedTime(formatDuration(totalSeconds));
+	    // Update the employee's logs list and clear other fields
 	    employeLoginDetails.setLogs(logs);
+	    employeLoginDetails.setLoginTime(employeLoginDetails.getLoginTime());  // Clear login time after logout
+	    employeLoginDetails.setLogutTime(logoutTime);  // Update with current logout time
+	    employeLoginDetails.setTotalLoggedTime(formatDuration(totalSeconds));
+	    employeLoginDetails.setDate(formattedDate);  // Update with current date
 
 	    return repo.save(employeLoginDetails);
 	}
@@ -238,9 +245,8 @@ public class LogInLogOutServiceImplimentation implements LogInLogOutService {
 	    long hours = totalSeconds / 3600;
 	    long minutes = (totalSeconds % 3600) / 60;
 	    long seconds = totalSeconds % 60;
-	    return hours + ":" + minutes + ":" + seconds;
+	    return hours + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
 	}
-
 
 	private static long calculateDuration(LocalTime loginTime, LocalTime logoutTime) {
 	    // If logout time is before login time, add 24 hours to logout time
@@ -255,41 +261,15 @@ public class LogInLogOutServiceImplimentation implements LogInLogOutService {
 
 	@Override
 	public LoginLogutDetails getDetails(String employeId) {
-		 LoginLogutDetails loginLogutDetails = repo.findByEmployeId(employeId);
-		    
-		    if (loginLogutDetails != null) {
-		        List<LoginDetails> logs = loginLogutDetails.getLogs();
-		        if (logs != null && !logs.isEmpty()) {
-		            // Group logs by date
-		            Map<String, List<LoginDetails>> logsByDate = logs.stream()
-		                .collect(Collectors.groupingBy(LoginDetails::getLoginDate));
-
-		            // Create a new list to hold grouped logs
-		            List<LogDayDetails> groupedLogs = new ArrayList<>();
-
-		            for (Map.Entry<String, List<LoginDetails>> entry : logsByDate.entrySet()) {
-		                String date = entry.getKey();
-		                List<LoginDetails> dailyLogs = entry.getValue();
-		                
-		                LogDayDetails dayDetails = new LogDayDetails();
-		                dayDetails.setDate(date);
-		                dayDetails.setLogs(dailyLogs);
-
-		                groupedLogs.add(dayDetails);
-		            }
-
-		            // Clear existing fields and set grouped logs
-		            loginLogutDetails.setLoginTime(null); // Clear unnecessary fields
-		            loginLogutDetails.setLogutTime(null);
-		            loginLogutDetails.setTotalLoggedTime(null);
-
-		            loginLogutDetails.setLogs1(groupedLogs);
-		        }
-
-		        return loginLogutDetails;
-		    } else {
-		        return null;
-		    }
+		LoginLogutDetails loginLogutDetails = repo.findByEmployeId(employeId);
+		if(loginLogutDetails != null)
+		{
+			return loginLogutDetails;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 }

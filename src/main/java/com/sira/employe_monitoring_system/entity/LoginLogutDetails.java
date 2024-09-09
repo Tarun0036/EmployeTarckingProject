@@ -3,6 +3,7 @@ package com.sira.employe_monitoring_system.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "loginLogutDetails")
@@ -18,12 +19,10 @@ public class LoginLogutDetails {
 
     private List<LoginDetails> logs = new ArrayList<>(); // Update this to a list of log details
 
-    private List<LogDayDetails> logs1 = new ArrayList<LogDayDetails>();
-    public LoginLogutDetails() {
+    public LoginLogutDetails()
+    {
     	
     }
-    
-    
 
     public LoginLogutDetails(String _id, String employeId, String name, String loginTime, String logutTime, String date,
 			String totalLoggedTime, List<LoginDetails> logs) {
@@ -101,20 +100,8 @@ public class LoginLogutDetails {
         return logs;
     }
 
-    public void setLogs(List<LoginDetails> logs2) {
-        this.logs = logs2;
+    public void setLogs(List<LoginDetails> logs) {
+        this.logs = logs;
     }
 
-
-
-	public List<LogDayDetails> getLogs1() {
-		return logs1;
-	}
-
-
-
-	public void setLogs1(List<LogDayDetails> logs1) {
-		this.logs1 = logs1;
-	}
-	
 }
