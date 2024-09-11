@@ -67,11 +67,11 @@ public class UsersController {
 		return service.getAllEmployesInCompany(role, company);
 	}
 	
-	@GetMapping("/allEmployes/{role}/{company}")
-	public Map allEmployes(@PathVariable String role, @PathVariable String company) 
-	{
-		return service.getAllEmployes(role, company);
-	}
+//	@GetMapping("/allEmployes/{role}/{company}")
+//	public Map allEmployes(@PathVariable String role, @PathVariable String company) 
+//	{
+//		return service.getAllEmployes(role, company);
+//	}
 
 	// Edit Employee
 	@PutMapping("/editEmploye/{empId}")
@@ -143,7 +143,7 @@ public class UsersController {
 	
 	
 	@PostMapping("/validate")
-	public ResponseEntity<Users> validate(@RequestBody LoginCredentials cred)
+	public ResponseEntity validate(@RequestBody LoginCredentials cred)
 	{
 		 Users users = service.login(cred.getEmail(), cred.getPassword());
 		if(users != null)
@@ -153,7 +153,7 @@ public class UsersController {
 		}
 		else
 		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>("Can't Login whith this credential's", HttpStatus.NO_CONTENT);
 		}
 	}
 	
@@ -183,6 +183,48 @@ public class UsersController {
 		else
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PutMapping("/exit/{employeId}")
+	public ResponseEntity<String> logut(@PathVariable String employeId)
+	{
+		String string = service.logut(employeId);
+		if(string != null)
+		{
+			return new ResponseEntity<String>(string, HttpStatus.OK);
+		}
+		else
+		{
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+	}
+	
+	@GetMapping("/allAdmins/{role}")
+	public ResponseEntity<List> getAllAdmins(@PathVariable String role)
+	{
+		List<Users> list = service.getAllAdmins(role);
+		if(list.size() != 0)
+		{
+			return new ResponseEntity<List>(list, HttpStatus.OK);
+		}
+		else
+		{
+			return new ResponseEntity<List>(HttpStatus.NO_CONTENT);
+		}
+	}
+	
+	@GetMapping("/allEmployes/{role}")
+	public ResponseEntity<List> getAllEmployes(@PathVariable String role)
+	{
+		List<Users> list = service.getAllEmployes(role);
+		if(list != null)
+		{
+			return new ResponseEntity<List>(list, HttpStatus.OK);
+		}
+		else
+		{
+			return new ResponseEntity<List>(HttpStatus.NO_CONTENT);
 		}
 	}
 }

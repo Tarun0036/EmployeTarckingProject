@@ -15,5 +15,4 @@ public interface CompanyRepository extends MongoRepository<Company, String>{
 	 Company findByCompany(String name);
 	 
 	 List<Company> findByIsDeletedFalse();
-	 
 }

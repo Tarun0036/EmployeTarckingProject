@@ -17,7 +17,7 @@ public class Users {
 	private String adminId;
 	private String companyId;
 	private boolean isDeleted;
-	
+	private boolean isActive;
 	public Users()
 	{
 		
@@ -127,12 +127,22 @@ public class Users {
 	}
 
 
+	
+	public boolean isActive() {
+		return isActive;
+	}
+
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Users [_id=" + _id + ", company=" + company + ", name=" + name + ", email=" + email + ", password="
 				+ password + ", role=" + role + ", empRole=" + empRole + ", contact=" + contact + ", employeId="
-				+ employeId + ", adminId=" + adminId + ", companyId=" + companyId + ", isDeleted=" + isDeleted + "]";
+				+ employeId + ", adminId=" + adminId + ", companyId=" + companyId + ", isDeleted=" + isDeleted
+				+ ", isActive=" + isActive + "]";
 	}
-	
-	
 }

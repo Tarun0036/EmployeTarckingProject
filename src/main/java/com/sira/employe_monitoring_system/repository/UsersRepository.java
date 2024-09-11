@@ -34,4 +34,8 @@ public interface UsersRepository extends MongoRepository<Users, String> {
 	List<Users> findByCompanyIdAndIsDeletedFalse(String companyId);
 	
 	List<Users> findByRoleAndAdminIdAndIsDeletedFalse(String role, String adminId);
+	
+	List<Users> findByRoleAndIsDeletedFalse(String role);
+	
+	List<Users> findByRoleAndCompanyInAndIsDeletedFalse(String role, List<String> companies);
 }

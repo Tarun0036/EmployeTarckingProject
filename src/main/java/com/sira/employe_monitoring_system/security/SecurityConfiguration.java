@@ -47,7 +47,8 @@ public class SecurityConfiguration {
 						"/users/editEmploye/**", "/users/allEmployes/**", "/users/getAmdins/**", "users/getCompany/**"
 						,"/employe/logintTime/**", "/employe/postLoginDetails", "users/getAdminByCompanyId/**", "/employe/logout/**"
 						, "/users/editAdmin/**", "/users/deleteAdmin/**", "/users/validate", "/users/allUsers", "/users/getEmployeByAdminId/**",
-						"/users/deleteEmploye/**", "/employe/getEmpDetails/**").
+						"/users/deleteEmploye/**","/employe/getEmpDetails/**", "/users/exit/**", "/users/allAdmins/**",
+						"/users/allEmployes/**").
 				permitAll()
 				.and().authorizeHttpRequests().
 				requestMatchers("/admin/find/**").

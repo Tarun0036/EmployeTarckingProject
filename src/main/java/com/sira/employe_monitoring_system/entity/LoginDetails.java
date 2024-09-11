@@ -43,12 +43,17 @@ public class LoginDetails {
 	        this.loginDate = loginDate;
 	    }
 
-	    public String getTimeDifference() {
-	        return timeDifference;
-	    }
+		public String getTimeDifference() {
+			return timeDifference;
+		}
 
-	    public void setTimeDifference(String timeDifference) {
-	        this.timeDifference = timeDifference;
-	    }
+		public void setTimeDifference(String timeDifference) {
+			this.timeDifference = timeDifference;
+		}
+
+	  
+		
+
+		
 
 }

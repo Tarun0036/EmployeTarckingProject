@@ -39,5 +39,11 @@ public interface UsersService {
 	List<Users> getAllUsers();
 	
 	List<Users> getEmployesBasedOnAdminId(String adminId);
+	
+	String logut(String empId);
+	
+	List<Users> getAllAdmins(String role);
+	
+	List<Users> getAllEmployes(String role);
 
 }

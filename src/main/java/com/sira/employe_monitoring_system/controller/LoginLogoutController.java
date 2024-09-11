@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.sira.employe_monitoring_system.entity.LoginLogutDetails;
 import com.sira.employe_monitoring_system.service.LogInLogOutService;
 
